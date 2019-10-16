@@ -25,7 +25,7 @@ before_install:
 install: # 在安装项目环境阶段需要运行的命令，一条一行，类似的还有 before_install
   - npm install -g hexo-cli
   - npm install
-  - npm install hexo-deployer-git --save
+#  - npm install hexo-deployer-git --save
 #  - npm install -g gulp@3.9.1 # 指定安装 gulp 3.9.1 版本
   - echo "hexo and packages install complete."
 
@@ -40,16 +40,23 @@ script: # 在构建阶段需要运行的命令，一条一行，类似的还有 
 
 after_success: # 在构建成功后要运行的命令，构建失败不会执行
 #  - gulp
-  - git config user.name "${GIT_USER_NAME}"
-  - git config user.email "${GIT_USER_EMAIL}"
+#  - git config user.name "${GIT_USER_NAME}"
+#  - git config user.email "${GIT_USER_EMAIL}"
   # 部署到 gyx138/gyx138.github.io
 #  - sed -i "s~git@github.com:~https://${GIT_REPO_TOKEN}@github.com/~" _config.yml
-  - sed -i "s~git@gitee.com:~https://${GIT_REPO_TOKEN}@github.com/~" _config.yml
+#  - sed -i "s~git@gitee.com:~https://${GIT_REPO_TOKEN}@github.com/~" _config.yml
 #  - sed -i "s~gyx138/gyx138.git~gyx138/gyx138.github.io.git~" _config.yml
 #  - cat ./_config.yml
-  - hexo deploy #> /dev/null # 通过 hexo 的 deploy 命令部署博客
+#  - hexo deploy #> /dev/null # 通过 hexo 的 deploy 命令部署博客
   
-  - git push --force "https://${GIT_USER_NAME}:${GITEE_PASSWD}@gitee.com/gyx138/hexo-gh-ci-ge.git" master
+  - cd ./public
+  - git init
+  - git config user.name "${GIT_USER_NAME}"
+  - git config user.email "${GIT_USER_EMAIL}"
+  - git add .
+  - git commit -m "Update By TravisCI With Build $TRAVIS_BUILD_NUMBER"
+  - git push --force --quiet "https://${GIT_REPO_TOKEN}@github.com/gyx138/hexo-gh-ci-ge.git" master:master
+  - git push --force "https://${GIT_USER_NAME}:${GITEE_PASSWD}@gitee.com/gyx138/hexo-gh-ci-ge.git" master:master
 
 # E: Build LifeCycle
 
